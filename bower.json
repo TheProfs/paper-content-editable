@@ -1,0 +1,20 @@
+{
+  "name": "paper-content-editable",
+  "homepage": "https://github.com/TheProfs/paper-content-editable",
+  "authors": [
+    "nicholaswmin <nik.kyriakides@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0"
+  }
+}
