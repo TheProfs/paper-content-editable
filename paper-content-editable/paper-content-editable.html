@@ -44,20 +44,24 @@
         window.paperContentEditable = this
       },
 
+      focus: function() {
+        return this.$.textbox.focus()
+      },
+
       _updateContent: function(e) {
         const el = this.$.textbox
 
         if (el.innerText === this.value) {
           // @NOTE Ignore `inputevents` that stem from us setting the value
           // programmatically.
-          return
+          return false
         }
 
         if (typeof e === 'string') {
           const value = e || ''
           el.innerText = value
 
-          return
+          return this.value
         }
 
         if (e && e.constructor) {
@@ -65,8 +69,10 @@
             this.set('value', el.innerText)
           }
 
-          return
+          return this.value
         }
+
+        return this.value
       }
     })
   </script>
