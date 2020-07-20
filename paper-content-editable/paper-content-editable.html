@@ -7,7 +7,6 @@
       }
 
       div {
-        display: inline-block;
         padding: 12px 8px;
         border: 1px solid #eee;
       }
@@ -20,8 +19,11 @@
     <div>
       <div
         id="textbox"
+        on-keyup="_fireEvent"
+        on-keydown="_fireEvent"
+        on-keypress="_fireEvent"
         on-input="_updateContent"
-        placeholder="Type something..."
+        placeholder$="[[placeholder]]"
         contenteditable="true"></div>
     </div>
   </template>
@@ -33,6 +35,21 @@
       properties: {
         value: {
           type: String
+        },
+
+        placeholder: {
+          type: String,
+          value: ''
+        },
+
+        stopKeyboardEventPropagation: {
+          type: Boolean,
+          value: false
+        },
+
+        autofocus: {
+          type: Boolean,
+          value: true
         }
       },
 
@@ -42,6 +59,12 @@
 
       attached: function() {
         window.paperContentEditable = this
+
+        if (this.autofocus) {
+          this.async(() => {
+            this.focus()
+          }, 5)
+        }
       },
 
       focus: function() {
@@ -60,19 +83,24 @@
         if (typeof e === 'string') {
           const value = e || ''
           el.innerText = value
-
-          return this.value
         }
 
         if (e && e.constructor) {
           if (e.constructor.name.toLowerCase() === 'inputevent') {
             this.set('value', el.innerText)
           }
-
-          return this.value
         }
 
-        return this.value
+        this.fire('value-changed')
+      },
+
+      _fireEvent: function(e) {
+        if (this.stopKeyboardEventPropagation) {
+          e.stopPropagation()
+          e.stopImmediatePropagation()
+        }
+
+        this.fire(e.type, e)
       }
     })
   </script>

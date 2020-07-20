@@ -19,7 +19,23 @@
   <body>
     <div class="container">
       <template is="dom-bind">
-        <paper-content-editable></paper-content-editable>
+        <paper-content-editable
+          placeholder="Type something..."
+          autofocus
+          stop-keyboard-event-propagation>
+        </paper-content-editable>
+
+        <script>
+          const el = document.querySelector('paper-content-editable')
+
+          el.addEventListener('value-changed', e => {
+            console.log('value-changed', e)
+          })
+
+          el.addEventListener('keydown', e => {
+            console.log('keydown', e)
+          })
+        </script>
       </template>
     </div>
   </body>
