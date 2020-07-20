@@ -2,22 +2,72 @@
 <dom-module id="paper-content-editable">
   <template>
     <style>
+      :host {
+        display: inline-block;
+      }
+
       div {
         display: inline-block;
-        background-color: #ccc;
-        border-radius: 8px;
-        padding: 4px;
+        padding: 12px 8px;
+        border: 1px solid #eee;
+      }
+
+      div[placeholder]:empty:before {
+        content: attr(placeholder);
+        color: #555;
       }
     </style>
     <div>
-      <h2> Hello World </h2>
+      <div
+        id="textbox"
+        on-input="_updateContent"
+        placeholder="Type something..."
+        contenteditable="true"></div>
     </div>
   </template>
 
   <script>
     Polymer({
       is: 'paper-content-editable',
+
+      properties: {
+        value: {
+          type: String
+        }
+      },
+
+      observers: [
+        '_updateContent(value)'
+      ],
+
+      attached: function() {
+        window.paperContentEditable = this
+      },
+
+      _updateContent: function(e) {
+        const el = this.$.textbox
+
+        if (el.innerText === this.value) {
+          // @NOTE Ignore `inputevents` that stem from us setting the value
+          // programmatically.
+          return
+        }
+
+        if (typeof e === 'string') {
+          const value = e || ''
+          el.innerText = value
+
+          return
+        }
+
+        if (e && e.constructor) {
+          if (e.constructor.name.toLowerCase() === 'inputevent') {
+            this.set('value', el.innerText)
+          }
+
+          return
+        }
+      }
     })
   </script>
-
 </dom-module>
